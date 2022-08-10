@@ -1,2 +1,3 @@
-# LAD_internship_frontend_tasks
-Tasks for frontend development internship in company LAD
+# Задачи для frontend стажировки в компании Lad
+
+Для каждого из четырех заданий создана своя папка, в которой в том числе находится README.md с описанием задания, вариантов решения и комментариями.
