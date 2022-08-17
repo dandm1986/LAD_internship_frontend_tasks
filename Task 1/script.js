@@ -28,7 +28,7 @@ const ruEng = {
   среда: 'wednesday',
   четверг: 'thursday',
   пятница: 'friday',
-  суббота: 'satturday',
+  суббота: 'saturday',
   воскресенье: 'sunday',
 };
 
