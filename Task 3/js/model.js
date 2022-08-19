@@ -42,8 +42,11 @@ export const newGame = () => {
 
 export const makeGuess = (guess) => {
   state.guess = guess;
-  state.attempts--;
-  state.score++;
+};
+
+export const next = () => {
+  state.attempts -= 1;
+  state.score += 1;
 };
 
 export const guessIsValid = () => {
@@ -51,13 +54,15 @@ export const guessIsValid = () => {
   if (state.password.length !== state.guess.length) {
     state.error = true;
     return false;
+  } else {
+    return true;
   }
 };
 
 export const guessIsRight = () => {
   if (state.password === state.guess) {
     state.win = true;
-    if (state.score > state.highscore) {
+    if (state.highscore === 0 || state.score < state.highscore) {
       state.highscore = state.score;
     }
     return true;
@@ -65,7 +70,7 @@ export const guessIsRight = () => {
 };
 
 export const gameOver = () => {
-  if (!state.win && state.attempts < 1) {
+  if (!state.win && state.attempts === 0) {
     state.loose = true;
     return true;
   }

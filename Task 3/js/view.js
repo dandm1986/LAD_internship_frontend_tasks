@@ -1,3 +1,5 @@
+let _data;
+
 const parentEl = document.querySelector(`body`);
 
 const clear = () => {
@@ -5,21 +7,23 @@ const clear = () => {
 };
 
 export const render = (data) => {
+  _data = data;
+
   clear();
 
   const markup = `
     <header>
       <div class="header-menu">
         <button class="btn again">Заново!</button>
-        <p class="attempts">Осталось попыток: ${data.attempts}</p>
+        <p class="attempts">Осталось попыток: ${_data.attempts}</p>
       </div>
       <h1>Взломай пароль!</h1>
       <div class="password">
         <ul class="numbers flex">
-        ${data.password
+        ${_data.password
           .split(``)
           .map(
-            data.win || data.loose
+            _data.win || _data.loose
               ? generateMarkupPasswordShow
               : generateMarkupPasswordHide
           )
@@ -34,17 +38,17 @@ export const render = (data) => {
       </section>
       <section class="section-message">
         <div class="section-message--container">
-          ${generateMarkupMessage(data)}  
+          ${generateMarkupMessage(_data)}  
         </div>
       </section>
     </main>
     <footer>
       <div class="score-container">
         <p class="label-score">Счет: <span class="score">${
-          data.score
+          _data.score
         }</span></p>
         <p class="label-highscore">
-          Лучший счет: <span class="highscore">${data.highscore}</span>
+          Лучший счет: <span class="highscore">${_data.highscore}</span>
         </p>
       </div>
     </footer>
@@ -53,29 +57,33 @@ export const render = (data) => {
   parentEl.insertAdjacentHTML(`afterbegin`, markup);
 };
 
-export const addHandlerGuess = (handler) => {
+export const addHandlersGuess = (handler) => {
   const checkBtn = document.querySelector(`.check`);
   const guess = document.querySelector(`.guess`);
 
   guess.onfocus = () => guess.classList.add(`focused`);
   guess.onblur = () => guess.classList.remove(`focused`);
 
-  checkBtn.addEventListener(`click`, () => {
-    handler(guess.value);
-    guess.value = ``;
-  });
-
-  document.onkeydown = (e) => {
-    if (isFinite(+e.key) && !guess.classList.contains(`focused`))
-      guess.value += e.key;
-    if (e.key === `Backspace` && !guess.classList.contains(`focused`)) {
-      guess.value = guess.value.slice(0, guess.value.length - 1);
-    }
-    if (e.key === `Enter`) {
+  if (!_data.win || !_data.loose) {
+    checkBtn.addEventListener(`click`, () => {
       handler(guess.value);
       guess.value = ``;
-    }
-  };
+    });
+
+    document.onkeydown = (e) => {
+      if (isFinite(+e.key) && !guess.classList.contains(`focused`))
+        guess.value += e.key;
+
+      if (e.key === `Backspace` && !guess.classList.contains(`focused`))
+        guess.value = guess.value.slice(0, guess.value.length - 1);
+
+      if (e.key === `Enter`) {
+        if (_data.win || _data.loose) return;
+        handler(guess.value);
+        guess.value = ``;
+      }
+    };
+  }
 };
 
 export const addHandlerAgain = (handler) => {

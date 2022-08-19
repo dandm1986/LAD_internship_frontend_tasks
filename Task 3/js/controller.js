@@ -1,19 +1,19 @@
 'use strict';
 
 import * as model from './model.js';
-import { render, addHandlerGuess, addHandlerAgain } from './view.js';
+import { render, addHandlersGuess, addHandlerAgain } from './view.js';
 
 const makeAttempt = (guess) => {
   model.makeGuess(guess);
+  model.next();
 
-  if (model.gameOver() || model.guessIsRight()) {
+  if (model.guessIsRight() || model.gameOver()) {
     render(model.state);
     addHandlerAgain(newGame);
   } else {
-    model.guessIsValid();
-    model.checkGuessNumbers();
+    model.guessIsValid() && model.checkGuessNumbers();
     render(model.state);
-    addHandlerGuess(makeAttempt);
+    addHandlersGuess(makeAttempt);
     addHandlerAgain(newGame);
   }
 };
@@ -21,7 +21,7 @@ const makeAttempt = (guess) => {
 const newGame = () => {
   model.newGame();
   render(model.state);
-  addHandlerGuess(makeAttempt);
+  addHandlersGuess(makeAttempt);
   addHandlerAgain(newGame);
 };
 
